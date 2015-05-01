@@ -1,5 +1,8 @@
-#pragma once
 #include <string>
+#include "GetProcesses.h";
+
+#pragma once
+
 namespace WindowsFormApplication1 {
 
 	using namespace System;
@@ -63,6 +66,7 @@ namespace WindowsFormApplication1 {
 		System::String ^address = "127.0.0.1";
 		Byte adr0 = 0, adr1 = 0, adr2 = 0, adr3 = 0;
 	private: System::Windows::Forms::Label^  labelServerIP;
+
 
 			 /// <summary>
 		/// Required designer variable.
