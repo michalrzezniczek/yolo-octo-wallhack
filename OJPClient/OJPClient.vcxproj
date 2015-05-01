@@ -99,7 +99,10 @@
     <ClInclude Include="Form1.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="GetProcesses.h" />
+    <ClInclude Include="HandleRequest.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SendInfo.h" />
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>

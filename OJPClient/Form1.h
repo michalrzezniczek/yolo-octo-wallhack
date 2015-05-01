@@ -22,6 +22,10 @@ namespace WindowsFormApplication1 {
 			//TODO: Add the constructor code here
 			//
 		}
+		System::String^ getAddressIP(void)
+		{
+			return address;
+		}
 
 	protected:
 		/// <summary>
@@ -56,7 +60,7 @@ namespace WindowsFormApplication1 {
 	protected:
 
 	private:
-		System::String ^address;
+		System::String ^address = "127.0.0.1";
 		Byte adr0 = 0, adr1 = 0, adr2 = 0, adr3 = 0;
 	private: System::Windows::Forms::Label^  labelServerIP;
 
@@ -350,6 +354,10 @@ namespace WindowsFormApplication1 {
 		}
 		private: System::Void buttonSave_Click( System::Object^  sender, System::EventArgs^  e )
 		{
+			if ( adr0 == 0 && adr1 == 0 && adr2 == 0 && adr3 == 0 ) {
+				adr0 = 127;
+				adr3 = 1;
+			}
 			address = (adr0.ToString() + "." + adr1.ToString() + "." + adr2.ToString() + "." + adr3.ToString());
 			labelServerIP->Text = address;
 			labelServerIP->Visible = true;
