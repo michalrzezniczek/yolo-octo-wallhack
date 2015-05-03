@@ -30,6 +30,35 @@ System::Void SendInfo::UpdateAddress( System::String ^newAddress )
 
 System::Boolean SendInfo::SendMessage( System::String^ message )
 {
-	//to do
-	return 0;
+	System::Int32 portSending = 80;
+	System::Net::Sockets::TcpClient ^client;
+	try {
+		client = gcnew System::Net::Sockets::TcpClient( address, portSending );
+
+		array<System::Byte> ^messageByte = System::Text::Encoding::ASCII->GetBytes( message );
+
+		System::Net::Sockets::NetworkStream ^networkStream = client->GetStream();
+
+		networkStream->Write( messageByte, 0, messageByte->Length );
+
+		
+	}
+	catch ( System::Net::Sockets::SocketException ^e ) {
+		//
+		client->Close();
+		return false;
+	}
+	catch ( System::ArgumentNullException ^e ) {
+		//
+		client->Close();
+		return false;
+	}
+	catch( System::ArgumentOutOfRangeException ^e )
+	{
+		//
+		client->Close();
+		return false;
+	}
+	client->Close();
+	return true;
 }
