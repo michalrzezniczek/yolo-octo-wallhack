@@ -4,16 +4,29 @@
 
 GetProcesses::GetProcesses(void)
 {
+	processesList = System::Diagnostics::Process::GetProcesses();
 }
 
-System::String^ GetProcesses::GetProcessesList()
+array<System::Diagnostics::Process^>^ GetProcesses::GetProcessesList()
 {
-	System::String ^delimiter = "\t";
-	array<System::Diagnostics::Process^> ^processesList = System::Diagnostics::Process::GetProcesses();
-	System::String ^output = "";
-	System::String ^priority = "", ^status = "";
+	return processesList;
+}
+
+void GetProcesses::UpdateProcessesList()
+{
+	processesList = System::Diagnostics::Process::GetProcesses();
+}
+
+System::String^ GetProcesses::ProcessesListToString()
+{
+	System::String ^output = gcnew System::String( "" ),
+				   ^priority = gcnew System::String( "" ), 
+				   ^status = gcnew System::String( "" ),
+				   ^hostName = gcnew System::String( System::Net::Dns::GetHostName() );
 	double ramUsed = 0.0;
 	System::TimeSpan time;
+
+	output += System::String::Format( "Host name: {0}\nProcesses\n", hostName );
 	output += System::String::Format( "{0,-24}{1,9}{2,8}{3,15}{4,-12}\n",
 			  "Process name", "Priority", "Memory", "Runs by", "Status" );
 	output += System::String::Format( "{0,-24}{1,9}{2,8}{3,15}{4,12}\n",
@@ -36,10 +49,10 @@ System::String^ GetProcesses::GetProcessesList()
 					break;
 			}
 			if ( var->Responding ) {
-				status = "Running" + delimiter;
+				status = "Running";
 			}
 			else {
-				status = "Not Running" + delimiter;
+				status = "Not Running";
 			}
 			
 			time = (var->StartTime.Now - var->StartTime);
@@ -54,6 +67,8 @@ System::String^ GetProcesses::GetProcessesList()
 		}
 
 		output += "\n";
+
+		
 	}
 
 	return output;

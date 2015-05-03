@@ -2,11 +2,15 @@
 #define GET_PROCESSES_H
 
 
-class GetProcesses
+ref class GetProcesses
 {
 private:
+	array<System::Diagnostics::Process^> ^processesList;
 public:
 	GetProcesses( void );
-	System::String^ GetProcessesList();
+	array<System::Diagnostics::Process^>^ GetProcessesList();
+	void UpdateProcessesList();
+	System::String^ ProcessesListToString();
+
 };
 #endif
