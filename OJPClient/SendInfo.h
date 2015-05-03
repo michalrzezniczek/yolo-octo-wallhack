@@ -1,18 +1,14 @@
-/*
 #ifndef SEND_INFO_H
 #define SEND_INFO_H
 
-class SendInfo
+ref class SendInfo
 {
 private:
-	//address
-	SendInfo( void );
+	System::String^ address;
 public:
-	//just one instance of this class!!
-	SendInfo( System::String^ address );
-	System::Void send( System::String^ message );
-	System::Void updateAddress( System::String ^newAddress );
+	SendInfo( void );
+	SendInfo(System::String^ address);
+	System::Boolean SendMessage( System::String^ message );
+	System::Void UpdateAddress( System::String ^newAddress );
 };
 #endif
-
-*/
