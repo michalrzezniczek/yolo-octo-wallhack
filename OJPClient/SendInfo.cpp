@@ -28,6 +28,35 @@ System::Void SendInfo::UpdateAddress( System::String ^newAddress )
 	this->address = newAddress;
 }
 
+System::Boolean SendInfo::SendMessage( System::String^ message, System::Net::Sockets::TcpClient ^client )
+{
+	System::Net::Sockets::NetworkStream ^networkStream;
+	try {
+		array<System::Byte> ^messageByte = System::Text::Encoding::ASCII->GetBytes( message );
+
+		networkStream = client->GetStream();
+
+		networkStream->Write( messageByte, 0, messageByte->Length );
+		networkStream->Close();
+	}
+	catch ( System::Net::Sockets::SocketException ^e ) {
+		//
+		networkStream->Close();
+		return false;
+	}
+	catch ( System::ArgumentNullException ^e ) {
+		//
+		networkStream->Close();
+		return false;
+	}
+	catch ( System::ArgumentOutOfRangeException ^e ) {
+		//
+		networkStream->Close();
+		return false;
+	}
+	return true;
+}
+
 System::Boolean SendInfo::SendMessage( System::String^ message )
 {
 	System::Int32 portSending = 80;
@@ -41,11 +70,10 @@ System::Boolean SendInfo::SendMessage( System::String^ message )
 
 		networkStream->Write( messageByte, 0, messageByte->Length );
 
-		
+
 	}
 	catch ( System::Net::Sockets::SocketException ^e ) {
 		//
-		client->Close();
 		return false;
 	}
 	catch ( System::ArgumentNullException ^e ) {
@@ -53,8 +81,7 @@ System::Boolean SendInfo::SendMessage( System::String^ message )
 		client->Close();
 		return false;
 	}
-	catch( System::ArgumentOutOfRangeException ^e )
-	{
+	catch ( System::ArgumentOutOfRangeException ^e ) {
 		//
 		client->Close();
 		return false;
