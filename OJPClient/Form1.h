@@ -1,5 +1,6 @@
 #include <string>
 #include "GetProcesses.h";
+#include "SendInfo.h";
 
 #pragma once
 
@@ -21,9 +22,8 @@ namespace WindowsFormApplication1 {
 		Form1(void)
 		{
 			InitializeComponent();
-			//
-			//TODO: Add the constructor code here
-			//
+			
+			backgroundWorker1->RunWorkerAsync();
 		}
 		System::String^ getAddressIP(void)
 		{
@@ -66,6 +66,9 @@ namespace WindowsFormApplication1 {
 		System::String ^address = "127.0.0.1";
 		Byte adr0 = 0, adr1 = 0, adr2 = 0, adr3 = 0;
 	private: System::Windows::Forms::Label^  labelServerIP;
+	private: System::ComponentModel::BackgroundWorker^  backgroundWorker1;
+
+
 
 
 			 /// <summary>
@@ -90,6 +93,7 @@ namespace WindowsFormApplication1 {
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->buttonSave = (gcnew System::Windows::Forms::Button());
 			this->labelServerIP = (gcnew System::Windows::Forms::Label());
+			this->backgroundWorker1 = (gcnew System::ComponentModel::BackgroundWorker());
 			this->SuspendLayout();
 			// 
 			// textServerIP
@@ -230,6 +234,10 @@ namespace WindowsFormApplication1 {
 			this->labelServerIP->TabIndex = 9;
 			this->labelServerIP->Visible = false;
 			// 
+			// backgroundWorker1
+			// 
+			this->backgroundWorker1->DoWork += gcnew System::ComponentModel::DoWorkEventHandler( this, &Form1::backgroundWorker1_DoWork );
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF( 6, 13 );
@@ -366,6 +374,56 @@ namespace WindowsFormApplication1 {
 			labelServerIP->Text = address;
 			labelServerIP->Visible = true;
 		}
+	private: System::Void backgroundWorker1_DoWork( System::Object^  sender, System::ComponentModel::DoWorkEventArgs^  e )
+	{
+		System::Int32 port;
+		System::Net::Sockets::TcpListener ^listner;
+		System::Net::Sockets::NetworkStream ^streamInput;
+		System::Net::Sockets::TcpClient ^client;
+		port = 80;
+		SendInfo ^ messageSender = gcnew SendInfo( address );
+		GetProcesses ^processes = gcnew GetProcesses();
+		bool sended = false;
+
+
+		try {
+
+
+			listner = gcnew System::Net::Sockets::TcpListener( port );
+			listner->Start();
+
+			while ( true ) {
+				/* //Async part
+				System::Threading::Tasks::Task < System::Net::Sockets::TcpClient ^ > ^clientTask = listner->AcceptTcpClientAsync();
+				if ( clientTask->IsCompleted ) {
+					streamInput = clientTask->Result->GetStream();
+					if ( streamInput->CanWrite ) {
+					processes->UpdateProcessesList();
+					messageSender->UpdateAddress( listner->ToString() );
+					sended = messageSender->SendMessage( processes->ProcessesListToString(), clientTask->Result );
+					clientTask->Result->Close();
+					streamInput->Close();
+					}
+					}*/
+				client = listner->AcceptTcpClient();
+				streamInput = client->GetStream();
+				if ( streamInput->CanWrite ) {
+					processes->UpdateProcessesList();
+					messageSender->UpdateAddress( listner->ToString() );
+			address = listner->ToString();
+			labelServerIP->Text = address;
+					sended = messageSender->SendMessage( processes->ProcessesListToString(), client );
+					client->Close();
+					streamInput->Close();
+				}
+			}
+		}
+		catch ( System::Net::Sockets::SocketException ^e ) {
+			//
+		}
+}
+
+
 };
 }
 
