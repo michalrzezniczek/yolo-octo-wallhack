@@ -62,6 +62,8 @@ namespace WindowsFormApplication1 {
 		/// </summary>
 		System::ComponentModel::Container ^components;
 		System::String ^address = "";
+		array<System::String ^> ^listOfRecivedData = gcnew array < System::String ^ >(50);
+		int numberOfRecivedData = 0;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -267,7 +269,7 @@ namespace WindowsFormApplication1 {
 		SendInfo ^ messageSender = gcnew SendInfo( address );
 		System::Net::IPAddress ^addressIP = System::Net::IPAddress::Parse( address );
 		int byteCount = 0;
-		array<System::Byte> ^messageByte = gcnew array<System::Byte>( 256 );
+		array<System::Byte> ^messageByte = gcnew array<System::Byte>( 1048576 );
 
 
 		try {
@@ -277,6 +279,11 @@ namespace WindowsFormApplication1 {
 				byteCount = streamInput->Read( messageByte, 0, messageByte->Length );
 				System::String ^message = System::Text::Encoding::ASCII->GetString( messageByte, 0, byteCount );
 				client->Close();
+				if ( numberOfRecivedData == 49 ) {
+					numberOfRecivedData = 0;
+				}
+				listOfRecivedData[numberOfRecivedData] = message;
+				numberOfRecivedData++;
 			}
 		}
 	
