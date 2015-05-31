@@ -62,7 +62,7 @@ namespace WindowsFormApplication1 {
 		/// </summary>
 		System::ComponentModel::Container ^components;
 		System::String ^address = "";
-		array<System::String ^> ^listOfRecivedData = gcnew array < System::String ^ >(50);
+		array<System::String ^, 2> ^listOfRecivedData = gcnew array < System::String ^, 2>( 50, 4 );
 		int numberOfRecivedData = 0;
 
 #pragma region Windows Form Designer generated code
@@ -270,20 +270,33 @@ namespace WindowsFormApplication1 {
 		System::Net::IPAddress ^addressIP = System::Net::IPAddress::Parse( address );
 		int byteCount = 0;
 		array<System::Byte> ^messageByte = gcnew array<System::Byte>( 1048576 );
+		System::String ^hostname;
 
-
+		System::String ^datePatt = "M/d/yyyy hh:mm:ss tt";
 		try {
 			client = gcnew System::Net::Sockets::TcpClient( address, port );
 			if ( client->Connected ) {
 				streamInput = client->GetStream();
 				byteCount = streamInput->Read( messageByte, 0, messageByte->Length );
 				System::String ^message = System::Text::Encoding::ASCII->GetString( messageByte, 0, byteCount );
+				
+				listOfRecivedData[numberOfRecivedData, 0] = System::Net::Dns::GetHostEntry( address )->HostName;
+				listOfRecivedData[numberOfRecivedData, 1] = address;
+				listOfRecivedData[numberOfRecivedData, 2] = System::DateTime::Now.ToString(datePatt);
 				client->Close();
 				if ( numberOfRecivedData == 49 ) {
 					numberOfRecivedData = 0;
 				}
-				listOfRecivedData[numberOfRecivedData] = message;
+				listOfRecivedData[numberOfRecivedData, 3] = message;
 				numberOfRecivedData++;
+
+
+				dataGridView1->RowCount = numberOfRecivedData;
+				for ( int i = 0; i < numberOfRecivedData; i++ ) {
+					for ( int j = 0; j < 3; j++ ) {
+						dataGridView1->Rows[i]->Cells[j]->Value = listOfRecivedData[i, j];
+					}
+				}
 			}
 		}
 	
