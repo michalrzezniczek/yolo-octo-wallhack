@@ -42,7 +42,7 @@ namespace WindowsFormApplication1 {
 	private: System::Windows::Forms::Button^  buttonCollectData;
 	private: System::Windows::Forms::TextBox^  textBoxIP;
 	private: System::Windows::Forms::TabPage^  tabPageList;
-	private: System::Windows::Forms::Label^  labelStatusOfConnection;
+
 	private: System::Windows::Forms::DataGridView^  dataGridView1;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  HostName;
 	private: System::Windows::Forms::DataGridViewTextBoxColumn^  IP;
@@ -64,7 +64,8 @@ namespace WindowsFormApplication1 {
 		System::ComponentModel::Container ^components;
 		System::String ^address = "";
 		array<System::String ^, 2> ^listOfRecivedData = gcnew array < System::String ^, 2>( 50, 4 );
-		int numberOfRecivedData = 0;
+	private: System::Windows::Forms::Label^  labelStatusOfConnection;
+			 int numberOfRecivedData = 0;
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -114,11 +115,14 @@ namespace WindowsFormApplication1 {
 			// 
 			// labelStatusOfConnection
 			// 
-			this->labelStatusOfConnection->AutoSize = true;
-			this->labelStatusOfConnection->Location = System::Drawing::Point( 116, 177 );
+			this->labelStatusOfConnection->Font = (gcnew System::Drawing::Font( L"Microsoft Sans Serif", 15, System::Drawing::FontStyle::Regular,
+				System::Drawing::GraphicsUnit::Point, static_cast<System::Byte>(238) ));
+			this->labelStatusOfConnection->Location = System::Drawing::Point( 8, 146 );
 			this->labelStatusOfConnection->Name = L"labelStatusOfConnection";
-			this->labelStatusOfConnection->Size = System::Drawing::Size( 0, 13 );
+			this->labelStatusOfConnection->Size = System::Drawing::Size( 260, 95 );
 			this->labelStatusOfConnection->TabIndex = 2;
+			this->labelStatusOfConnection->Text = L"";
+			this->labelStatusOfConnection->TextAlign = System::Drawing::ContentAlignment::MiddleCenter;
 			// 
 			// buttonCollectData
 			// 
@@ -223,6 +227,7 @@ namespace WindowsFormApplication1 {
 			textBoxIP->Text = "";
 			textBoxIP->ForeColor = System::Drawing::Color::Black;
 		}
+		labelStatusOfConnection->Text = "";
 	}
 	private: System::Void textBoxIP_Leave( System::Object^  sender, System::EventArgs^  e )
 	{
@@ -277,7 +282,13 @@ namespace WindowsFormApplication1 {
 		System::String ^datePatt = "M/d/yyyy hh:mm:ss tt";
 		try {
 			client = gcnew System::Net::Sockets::TcpClient( address, port );
+
+			buttonCollectData->Enabled = false;
+			labelStatusOfConnection->Text = "Collecting data";
+			this->Refresh();
+
 			if ( client->Connected ) {
+				
 				streamInput = client->GetStream();
 				byteCount = streamInput->Read( messageByte, 0, messageByte->Length );
 				System::String ^message = System::Text::Encoding::ASCII->GetString( messageByte, 0, byteCount );
@@ -299,11 +310,15 @@ namespace WindowsFormApplication1 {
 						dataGridView1->Rows[i]->Cells[j]->Value = listOfRecivedData[i, j];
 					}
 				}
+
+				buttonCollectData->Enabled = true;
+				labelStatusOfConnection->Text = "The data were collected.";
 			}
 		}
 	
 		catch ( System::Net::Sockets::SocketException ^e ) {
-				 //informacja ze nie mozna polaczyc
+			labelStatusOfConnection->Text = "I can not connect to the host! Try again later.";
+			buttonCollectData->Enabled = true;
 		}
 	}
 	private: System::Void dataGridView1_CellDoubleClick( System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e )
