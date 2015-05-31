@@ -23,7 +23,7 @@ namespace WindowsFormApplication1 {
 		{
 			InitializeComponent();
 			
-			backgroundWorker1->RunWorkerAsync();
+		//	backgroundWorker1->RunWorkerAsync();
 		}
 		System::String^ getAddressIP(void)
 		{
@@ -65,6 +65,10 @@ namespace WindowsFormApplication1 {
 	private:
 		System::String ^address = "127.0.0.1";
 		Byte adr0 = 0, adr1 = 0, adr2 = 0, adr3 = 0;
+		System::Int32 port = 8000;
+		System::Net::Sockets::TcpListener ^listner;
+		System::Net::Sockets::NetworkStream ^streamInput;
+		System::Net::Sockets::TcpClient ^client;
 	private: System::Windows::Forms::Label^  labelServerIP;
 	private: System::ComponentModel::BackgroundWorker^  backgroundWorker1;
 	private: int licznik = 0;
@@ -245,7 +249,8 @@ namespace WindowsFormApplication1 {
 			// 
 			// backgroundWorker1
 			// 
-			this->backgroundWorker1->DoWork += gcnew System::ComponentModel::DoWorkEventHandler( this, &Form1::backgroundWorker1_DoWork );
+		//	this->backgroundWorker1->DoWork += gcnew System::ComponentModel::DoWorkEventHandler( this, &Form1::backgroundWorker1_DoWork );
+		//	this->backgroundWorker1->RunWorkerCompleted += gcnew System::ComponentModel::RunWorkerCompletedEventHandler( this, &Form1::backgroundWorker1_RunWorkerCompleted );
 			// 
 			// buttonConnect
 			// 
@@ -402,31 +407,80 @@ namespace WindowsFormApplication1 {
 			labelServerIP->Text = address;
 			labelServerIP->Visible = true;
 		}
-	private: System::Void backgroundWorker1_DoWork( System::Object^  sender, System::ComponentModel::DoWorkEventArgs^  e )
+	private: System::Void backgroundWorker1_DoWork( System::Object^  sender, System::ComponentModel::DoWorkEventArgs^  e)
 	{
+		while ( true ) {
+			client = listner->AcceptTcpClient();
+			send();
+			
+		}
 	}
+
+			 
 
 
 private: System::Void buttonConnect_Click( System::Object^  sender, System::EventArgs^  e )
 {
-	System::Int32 port;
+	/*System::Int32 port;
 	System::Net::Sockets::TcpListener ^listner;
 	System::Net::Sockets::NetworkStream ^streamInput;
 	System::Net::Sockets::TcpClient ^client;
-	port = 80;
+	port = 8000;
 	SendInfo ^ messageSender = gcnew SendInfo( address );
 	GetProcesses ^processes = gcnew GetProcesses();
 	bool sended = false;
 
+	*/
 
+	System::Net::IPAddress ^addressIP = System::Net::IPAddress::Parse( address );
 	try {
+//		while ( true ) {
+			listner = gcnew System::Net::Sockets::TcpListener( addressIP, port );
+			listner->Start();
+
+			backgroundWorker1->DoWork += gcnew System::ComponentModel::DoWorkEventHandler( this, &WindowsFormApplication1::Form1::backgroundWorker1_DoWork );
+		//	backgroundWorker1->RunWorkerCompleted += gcnew System::ComponentModel::RunWorkerCompletedEventHandler( this, &WindowsFormApplication1::Form1::backgroundWorker1_RunWorkerCompleted );
+			
+			backgroundWorker1->RunWorkerAsync();
+			
+			buttonConnect->Enabled = false;
+
+	//		client = listner->AcceptTcpClient();
+
+			/*streamInput = client->GetStream();
+
+			buttonConnect->Enabled = false;
+
+			processes->UpdateProcessesList();
+			messageSender->UpdateAddress( listner->ToString() );
+			address = listner->ToString();
+			labelServerIP->Text = address;
+			sended = messageSender->SendMessage( processes->ProcessesListToString(), client );
+
+			streamInput->Close();
+
+			client->Close();*/
+	//		listner->Stop();
+
+		//	buttonConnect->Enabled = true;
+
+//		}
 
 
+
+/*		client = gcnew System::Net::Sockets::TcpClient( address, port );
+
+		messageSender->SendMessage( "feedMe", client );
+		client->Close();
+		*/
+
+		/*
 		listner = gcnew System::Net::Sockets::TcpListener( port );
 		listner->Start();
 		//musi byæ rz¹danie by zacz¹³ wysy³aæ..
 		//POPRAWIC
-		while ( true ) {
+		*/
+//		while ( true ) {
 			/*//Async part
 			System::Threading::Tasks::Task < System::Net::Sockets::TcpClient ^ > ^clientTask = listner->AcceptTcpClientAsync();
 			if ( clientTask->IsCompleted ) {
@@ -439,6 +493,7 @@ private: System::Void buttonConnect_Click( System::Object^  sender, System::Even
 			streamInput->Close();
 			}
 			}*/
+		/*
 			buttonConnect->Enabled = false;
 			client = listner->AcceptTcpClient();
 			streamInput = client->GetStream();
@@ -456,11 +511,49 @@ private: System::Void buttonConnect_Click( System::Object^  sender, System::Even
 				buttonConnect->Enabled = true;
 				break;
 			}
-		}
+		}*/
 	}
 	catch ( System::Net::Sockets::SocketException ^e ) {
 		//
 	}
+}
+		 private: System::Void send()
+		 {
+			 SendInfo ^ messageSender = gcnew SendInfo( address );
+			 GetProcesses ^processes = gcnew GetProcesses();
+			 bool sended = false;
+
+			 streamInput = client->GetStream();
+
+			 buttonConnect->Enabled = false;
+
+			 processes->UpdateProcessesList();
+			 messageSender->UpdateAddress( listner->ToString() );
+			 sended = messageSender->SendMessage( processes->ProcessesListToString(), client );
+
+			 streamInput->Close();
+			 client->Close();
+			 
+		 }
+private: System::Void backgroundWorker1_RunWorkerCompleted( System::Object^  sender, System::ComponentModel::RunWorkerCompletedEventArgs^  e )
+{
+	SendInfo ^ messageSender = gcnew SendInfo( address );
+	GetProcesses ^processes = gcnew GetProcesses();
+	bool sended = false;
+
+	streamInput = client->GetStream();
+
+	buttonConnect->Enabled = false;
+
+	processes->UpdateProcessesList();
+	messageSender->UpdateAddress( listner->ToString() );
+	address = listner->ToString();
+	labelServerIP->Text = address;
+	sended = messageSender->SendMessage( processes->ProcessesListToString(), client );
+
+	streamInput->Close();
+	client->Close();
+//	buttonConnect->Enabled = true;
 }
 };
 }
