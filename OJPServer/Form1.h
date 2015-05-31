@@ -1,4 +1,5 @@
 #pragma once
+#include "SendInfo.h"
 
 namespace WindowsFormApplication1 {
 
@@ -60,6 +61,7 @@ namespace WindowsFormApplication1 {
 		/// Required designer variable.
 		/// </summary>
 		System::ComponentModel::Container ^components;
+		System::String ^address = "";
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -117,12 +119,14 @@ namespace WindowsFormApplication1 {
 			// 
 			// buttonCollectData
 			// 
+			this->buttonCollectData->Enabled = false;
 			this->buttonCollectData->Location = System::Drawing::Point( 63, 111 );
 			this->buttonCollectData->Name = L"buttonCollectData";
 			this->buttonCollectData->Size = System::Drawing::Size( 156, 32 );
 			this->buttonCollectData->TabIndex = 1;
 			this->buttonCollectData->Text = L"Connect and get data";
 			this->buttonCollectData->UseVisualStyleBackColor = true;
+			this->buttonCollectData->Click += gcnew System::EventHandler( this, &Form1::buttonCollectData_Click );
 			// 
 			// textBoxIP
 			// 
@@ -151,6 +155,7 @@ namespace WindowsFormApplication1 {
 			// dataGridView1
 			// 
 			this->dataGridView1->AllowUserToAddRows = false;
+			this->dataGridView1->AllowUserToDeleteRows = false;
 			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->dataGridView1->Columns->AddRange( gcnew cli::array< System::Windows::Forms::DataGridViewColumn^  >( 3 )
 			{
@@ -160,6 +165,7 @@ namespace WindowsFormApplication1 {
 			this->dataGridView1->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->dataGridView1->Location = System::Drawing::Point( 3, 3 );
 			this->dataGridView1->Name = L"dataGridView1";
+			this->dataGridView1->ReadOnly = true;
 			this->dataGridView1->Size = System::Drawing::Size( 272, 231 );
 			this->dataGridView1->TabIndex = 0;
 			// 
@@ -168,6 +174,7 @@ namespace WindowsFormApplication1 {
 			this->HostName->AutoSizeMode = System::Windows::Forms::DataGridViewAutoSizeColumnMode::Fill;
 			this->HostName->HeaderText = L"HostName";
 			this->HostName->Name = L"HostName";
+			this->HostName->ReadOnly = true;
 			this->HostName->Resizable = System::Windows::Forms::DataGridViewTriState::True;
 			// 
 			// IP
@@ -175,6 +182,7 @@ namespace WindowsFormApplication1 {
 			this->IP->AutoSizeMode = System::Windows::Forms::DataGridViewAutoSizeColumnMode::Fill;
 			this->IP->HeaderText = L"IP";
 			this->IP->Name = L"IP";
+			this->IP->ReadOnly = true;
 			this->IP->Resizable = System::Windows::Forms::DataGridViewTriState::False;
 			// 
 			// Date
@@ -182,6 +190,7 @@ namespace WindowsFormApplication1 {
 			this->Date->AutoSizeMode = System::Windows::Forms::DataGridViewAutoSizeColumnMode::AllCells;
 			this->Date->HeaderText = L"Date";
 			this->Date->Name = L"Date";
+			this->Date->ReadOnly = true;
 			this->Date->Resizable = System::Windows::Forms::DataGridViewTriState::False;
 			this->Date->Width = 55;
 			// 
@@ -219,7 +228,7 @@ namespace WindowsFormApplication1 {
 			textBoxIP->ForeColor = System::Drawing::Color::Gray;
 		}
 		else {
-			System::String ^address = textBoxIP->Text;
+			address = textBoxIP->Text;
 			System::Int32 tmp;
 
 			System::String ^patternRegex = "([0-2]|[0-9][0-9]|[0-2][0-9][0-9])[.]([0-2]|[0-9][0-9]|[0-2][0-9][0-9])[.]([0-2]|[0-9][0-9]|[0-2][0-9][0-9])[.]([0-2]|[0-9][0-9]|[0-2][0-9][0-9])";
@@ -238,11 +247,41 @@ namespace WindowsFormApplication1 {
 					}
 				}
 			}
-
+			buttonCollectData->Enabled = true;
 			if ( correct == false ) {
+				address = "";
+				buttonCollectData->Enabled = false;
 				textBoxIP->Text = "Wrong IP!";
 				textBoxIP->ForeColor = System::Drawing::Color::Red;
 			}
+		}
+	}
+
+	private: System::Void buttonCollectData_Click( System::Object^  sender, System::EventArgs^  e )
+	{
+		System::Int32 port;
+		System::Net::Sockets::TcpListener ^listner;
+		System::Net::Sockets::NetworkStream ^streamInput;
+		System::Net::Sockets::TcpClient ^client;
+		port = 8000;
+		SendInfo ^ messageSender = gcnew SendInfo( address );
+		System::Net::IPAddress ^addressIP = System::Net::IPAddress::Parse( address );
+		int byteCount = 0;
+		array<System::Byte> ^messageByte = gcnew array<System::Byte>( 256 );
+
+
+		try {
+			client = gcnew System::Net::Sockets::TcpClient( address, port );
+			if ( client->Connected ) {
+				streamInput = client->GetStream();
+				byteCount = streamInput->Read( messageByte, 0, messageByte->Length );
+				System::String ^message = System::Text::Encoding::ASCII->GetString( messageByte, 0, byteCount );
+				client->Close();
+			}
+		}
+	
+		catch ( System::Net::Sockets::SocketException ^e ) {
+				 //informacja ze nie mozna polaczyc
 		}
 	}
 };
