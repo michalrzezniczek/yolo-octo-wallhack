@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="DetailsForm.cpp" />
     <ClCompile Include="SendInfo.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -98,6 +99,9 @@
     <ClCompile Include="WindowsFormApplication1.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DetailsForm.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="Form1.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -109,6 +113,9 @@
     <ResourceCompile Include="app.rc" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="DetailsForm.resx">
+      <DependentUpon>DetailsForm.h</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resX">
       <DependentUpon>Form1.h</DependentUpon>
       <SubType>Designer</SubType>

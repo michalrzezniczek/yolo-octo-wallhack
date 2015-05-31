@@ -1,5 +1,6 @@
 #pragma once
 #include "SendInfo.h"
+#include "DetailsForm.h"
 
 namespace WindowsFormApplication1 {
 
@@ -170,6 +171,7 @@ namespace WindowsFormApplication1 {
 			this->dataGridView1->ReadOnly = true;
 			this->dataGridView1->Size = System::Drawing::Size( 272, 231 );
 			this->dataGridView1->TabIndex = 0;
+			this->dataGridView1->CellDoubleClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler( this, &Form1::dataGridView1_CellDoubleClick );
 			// 
 			// HostName
 			// 
@@ -303,6 +305,15 @@ namespace WindowsFormApplication1 {
 		catch ( System::Net::Sockets::SocketException ^e ) {
 				 //informacja ze nie mozna polaczyc
 		}
+	}
+	private: System::Void dataGridView1_CellDoubleClick( System::Object^  sender, System::Windows::Forms::DataGridViewCellEventArgs^  e )
+	{
+		int currentRow = dataGridView1->CurrentCellAddress.Y;
+
+		OJPServer::DetailsForm ^window = gcnew OJPServer::DetailsForm( listOfRecivedData[currentRow, 0], listOfRecivedData[currentRow, 1], listOfRecivedData[currentRow,3] );
+		
+		window->ShowDialog();
+
 	}
 };
 }
