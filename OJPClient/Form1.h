@@ -67,6 +67,14 @@ namespace WindowsFormApplication1 {
 		Byte adr0 = 0, adr1 = 0, adr2 = 0, adr3 = 0;
 	private: System::Windows::Forms::Label^  labelServerIP;
 	private: System::ComponentModel::BackgroundWorker^  backgroundWorker1;
+	private: int licznik = 0;
+	private: System::Windows::Forms::Button^  buttonConnect;
+
+
+
+
+
+
 
 
 
@@ -94,6 +102,7 @@ namespace WindowsFormApplication1 {
 			this->buttonSave = (gcnew System::Windows::Forms::Button());
 			this->labelServerIP = (gcnew System::Windows::Forms::Label());
 			this->backgroundWorker1 = (gcnew System::ComponentModel::BackgroundWorker());
+			this->buttonConnect = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// textServerIP
@@ -103,7 +112,7 @@ namespace WindowsFormApplication1 {
 				| System::Windows::Forms::AnchorStyles::Right));
 			this->textServerIP->Font = (gcnew System::Drawing::Font( L"Microsoft Sans Serif", 15, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(238) ));
-			this->textServerIP->Location = System::Drawing::Point( 13, 13 );
+			this->textServerIP->Location = System::Drawing::Point( 18, 24 );
 			this->textServerIP->Name = L"textServerIP";
 			this->textServerIP->Size = System::Drawing::Size( 101, 23 );
 			this->textServerIP->TabIndex = 0;
@@ -114,7 +123,7 @@ namespace WindowsFormApplication1 {
 			this->textBoxServerIP0->Font = (gcnew System::Drawing::Font( L"Microsoft Sans Serif", 20, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(238) ));
 			this->textBoxServerIP0->ImeMode = System::Windows::Forms::ImeMode::NoControl;
-			this->textBoxServerIP0->Location = System::Drawing::Point( 18, 40 );
+			this->textBoxServerIP0->Location = System::Drawing::Point( 23, 51 );
 			this->textBoxServerIP0->Mask = L"000";
 			this->textBoxServerIP0->Name = L"textBoxServerIP0";
 			this->textBoxServerIP0->ResetOnPrompt = false;
@@ -133,7 +142,7 @@ namespace WindowsFormApplication1 {
 			this->textBoxServerIP1->BeepOnError = true;
 			this->textBoxServerIP1->Font = (gcnew System::Drawing::Font( L"Microsoft Sans Serif", 20, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(238) ));
-			this->textBoxServerIP1->Location = System::Drawing::Point( 75, 39 );
+			this->textBoxServerIP1->Location = System::Drawing::Point( 80, 50 );
 			this->textBoxServerIP1->Mask = L"000";
 			this->textBoxServerIP1->Name = L"textBoxServerIP1";
 			this->textBoxServerIP1->ResetOnPrompt = false;
@@ -151,7 +160,7 @@ namespace WindowsFormApplication1 {
 			// 
 			this->textBoxServerIP2->Font = (gcnew System::Drawing::Font( L"Microsoft Sans Serif", 20, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(238) ));
-			this->textBoxServerIP2->Location = System::Drawing::Point( 132, 39 );
+			this->textBoxServerIP2->Location = System::Drawing::Point( 137, 50 );
 			this->textBoxServerIP2->Mask = L"000";
 			this->textBoxServerIP2->Name = L"textBoxServerIP2";
 			this->textBoxServerIP2->RightToLeft = System::Windows::Forms::RightToLeft::Yes;
@@ -166,7 +175,7 @@ namespace WindowsFormApplication1 {
 			// 
 			this->textBoxServerIP3->Font = (gcnew System::Drawing::Font( L"Microsoft Sans Serif", 20, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(238) ));
-			this->textBoxServerIP3->Location = System::Drawing::Point( 189, 39 );
+			this->textBoxServerIP3->Location = System::Drawing::Point( 194, 50 );
 			this->textBoxServerIP3->Mask = L"000";
 			this->textBoxServerIP3->Name = L"textBoxServerIP3";
 			this->textBoxServerIP3->RightToLeft = System::Windows::Forms::RightToLeft::Yes;
@@ -182,7 +191,7 @@ namespace WindowsFormApplication1 {
 			this->labelDot->AutoSize = true;
 			this->labelDot->Font = (gcnew System::Drawing::Font( L"Microsoft Sans Serif", 20, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(238) ));
-			this->labelDot->Location = System::Drawing::Point( 62, 47 );
+			this->labelDot->Location = System::Drawing::Point( 67, 58 );
 			this->labelDot->Margin = System::Windows::Forms::Padding( 0 );
 			this->labelDot->Name = L"labelDot";
 			this->labelDot->Size = System::Drawing::Size( 22, 31 );
@@ -194,7 +203,7 @@ namespace WindowsFormApplication1 {
 			this->label1->AutoSize = true;
 			this->label1->Font = (gcnew System::Drawing::Font( L"Microsoft Sans Serif", 20, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(238) ));
-			this->label1->Location = System::Drawing::Point( 119, 47 );
+			this->label1->Location = System::Drawing::Point( 124, 58 );
 			this->label1->Margin = System::Windows::Forms::Padding( 0 );
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size( 22, 31 );
@@ -206,7 +215,7 @@ namespace WindowsFormApplication1 {
 			this->label2->AutoSize = true;
 			this->label2->Font = (gcnew System::Drawing::Font( L"Microsoft Sans Serif", 20, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(238) ));
-			this->label2->Location = System::Drawing::Point( 176, 47 );
+			this->label2->Location = System::Drawing::Point( 181, 58 );
 			this->label2->Margin = System::Windows::Forms::Padding( 0 );
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size( 22, 31 );
@@ -215,7 +224,7 @@ namespace WindowsFormApplication1 {
 			// 
 			// buttonSave
 			// 
-			this->buttonSave->Location = System::Drawing::Point( 91, 84 );
+			this->buttonSave->Location = System::Drawing::Point( 56, 94 );
 			this->buttonSave->Name = L"buttonSave";
 			this->buttonSave->Size = System::Drawing::Size( 75, 23 );
 			this->buttonSave->TabIndex = 8;
@@ -228,7 +237,7 @@ namespace WindowsFormApplication1 {
 			this->labelServerIP->AutoSize = true;
 			this->labelServerIP->Font = (gcnew System::Drawing::Font( L"Microsoft Sans Serif", 15, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(238) ));
-			this->labelServerIP->Location = System::Drawing::Point( 120, 13 );
+			this->labelServerIP->Location = System::Drawing::Point( 125, 24 );
 			this->labelServerIP->Name = L"labelServerIP";
 			this->labelServerIP->Size = System::Drawing::Size( 0, 25 );
 			this->labelServerIP->TabIndex = 9;
@@ -238,11 +247,22 @@ namespace WindowsFormApplication1 {
 			// 
 			this->backgroundWorker1->DoWork += gcnew System::ComponentModel::DoWorkEventHandler( this, &Form1::backgroundWorker1_DoWork );
 			// 
+			// buttonConnect
+			// 
+			this->buttonConnect->Location = System::Drawing::Point( 137, 95 );
+			this->buttonConnect->Name = L"buttonConnect";
+			this->buttonConnect->Size = System::Drawing::Size( 75, 23 );
+			this->buttonConnect->TabIndex = 10;
+			this->buttonConnect->Text = L"Connect";
+			this->buttonConnect->UseVisualStyleBackColor = true;
+			this->buttonConnect->Click += gcnew System::EventHandler( this, &Form1::buttonConnect_Click );
+			// 
 			// Form1
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF( 6, 13 );
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size( 257, 119 );
+			this->Controls->Add( this->buttonConnect );
 			this->Controls->Add( this->labelServerIP );
 			this->Controls->Add( this->buttonSave );
 			this->Controls->Add( this->textBoxServerIP3 );
@@ -300,8 +320,10 @@ namespace WindowsFormApplication1 {
 
 		private: System::Void textBoxServerIP0_TextChanged( System::Object^  sender, System::EventArgs^  e )
 		{
-			if ( textBoxServerIP0->Text->Length == 3 ) {
+			if ( textBoxServerIP0->Text->Length == 3 && licznik == 0 ) {
+				licznik = licznik + 1;
 				ProcessTabKey( true );
+				licznik = 0;
 			}
 		}
 
@@ -320,8 +342,10 @@ namespace WindowsFormApplication1 {
 
 		private: System::Void textBoxServerIP1_TextChanged( System::Object^  sender, System::EventArgs^  e )
 		{
-			if ( textBoxServerIP1->Text->Length == 3 ) {
+			if ( textBoxServerIP1->Text->Length == 3 && licznik == 0) {
+				licznik += 1;
 				ProcessTabKey( true );
+				licznik = 0;
 			}
 		}
 		
@@ -340,8 +364,10 @@ namespace WindowsFormApplication1 {
 
 		private: System::Void textBoxServerIP2_TextChanged( System::Object^  sender, System::EventArgs^  e )
 		{
-			if ( textBoxServerIP2->Text->Length == 3 ) {
+			if ( textBoxServerIP2->Text->Length == 3 && licznik == 0 ) {
+				licznik += 1;
 				ProcessTabKey( true );
+				licznik = 0;
 			}
 		}
 
@@ -360,8 +386,10 @@ namespace WindowsFormApplication1 {
 
 		private: System::Void textBoxServerIP3_TextChanged( System::Object^  sender, System::EventArgs^  e )
 		{
-			if ( textBoxServerIP3->Text->Length == 3 ) {
+			if ( textBoxServerIP3->Text->Length == 3 && licznik == 0 ){
+				licznik += 1;
 				ProcessTabKey( true );
+				licznik = 0;
 			}
 		}
 		private: System::Void buttonSave_Click( System::Object^  sender, System::EventArgs^  e )
@@ -376,54 +404,64 @@ namespace WindowsFormApplication1 {
 		}
 	private: System::Void backgroundWorker1_DoWork( System::Object^  sender, System::ComponentModel::DoWorkEventArgs^  e )
 	{
-		System::Int32 port;
-		System::Net::Sockets::TcpListener ^listner;
-		System::Net::Sockets::NetworkStream ^streamInput;
-		System::Net::Sockets::TcpClient ^client;
-		port = 80;
-		SendInfo ^ messageSender = gcnew SendInfo( address );
-		GetProcesses ^processes = gcnew GetProcesses();
-		bool sended = false;
+	}
 
 
-		try {
+private: System::Void buttonConnect_Click( System::Object^  sender, System::EventArgs^  e )
+{
+	System::Int32 port;
+	System::Net::Sockets::TcpListener ^listner;
+	System::Net::Sockets::NetworkStream ^streamInput;
+	System::Net::Sockets::TcpClient ^client;
+	port = 80;
+	SendInfo ^ messageSender = gcnew SendInfo( address );
+	GetProcesses ^processes = gcnew GetProcesses();
+	bool sended = false;
 
 
-			listner = gcnew System::Net::Sockets::TcpListener( port );
-			listner->Start();
+	try {
 
-			while ( true ) {
-				/* //Async part
-				System::Threading::Tasks::Task < System::Net::Sockets::TcpClient ^ > ^clientTask = listner->AcceptTcpClientAsync();
-				if ( clientTask->IsCompleted ) {
-					streamInput = clientTask->Result->GetStream();
-					if ( streamInput->CanWrite ) {
-					processes->UpdateProcessesList();
-					messageSender->UpdateAddress( listner->ToString() );
-					sended = messageSender->SendMessage( processes->ProcessesListToString(), clientTask->Result );
-					clientTask->Result->Close();
-					streamInput->Close();
-					}
-					}*/
-				client = listner->AcceptTcpClient();
-				streamInput = client->GetStream();
-				if ( streamInput->CanWrite ) {
-					processes->UpdateProcessesList();
-					messageSender->UpdateAddress( listner->ToString() );
-			address = listner->ToString();
-			labelServerIP->Text = address;
-					sended = messageSender->SendMessage( processes->ProcessesListToString(), client );
-					client->Close();
-					streamInput->Close();
-				}
+
+		listner = gcnew System::Net::Sockets::TcpListener( port );
+		listner->Start();
+		//musi byæ rz¹danie by zacz¹³ wysy³aæ..
+		//POPRAWIC
+		while ( true ) {
+			/*//Async part
+			System::Threading::Tasks::Task < System::Net::Sockets::TcpClient ^ > ^clientTask = listner->AcceptTcpClientAsync();
+			if ( clientTask->IsCompleted ) {
+			streamInput = clientTask->Result->GetStream();
+			if ( streamInput->CanWrite ) {
+			processes->UpdateProcessesList();
+			messageSender->UpdateAddress( listner->ToString() );
+			sended = messageSender->SendMessage( processes->ProcessesListToString(), clientTask->Result );
+			clientTask->Result->Close();
+			streamInput->Close();
+			}
+			}*/
+			buttonConnect->Enabled = false;
+			client = listner->AcceptTcpClient();
+			streamInput = client->GetStream();
+			if ( streamInput->CanWrite ) {
+				processes->UpdateProcessesList();
+				messageSender->UpdateAddress( listner->ToString() );
+				address = listner->ToString();
+				labelServerIP->Text = address;
+				sended = messageSender->SendMessage( processes->ProcessesListToString(), client );
+				client->Close();
+				streamInput->Close();
+				
+			}
+			if ( sended == true ) {
+				buttonConnect->Enabled = true;
+				break;
 			}
 		}
-		catch ( System::Net::Sockets::SocketException ^e ) {
-			//
-		}
+	}
+	catch ( System::Net::Sockets::SocketException ^e ) {
+		//
+	}
 }
-
-
 };
 }
 
