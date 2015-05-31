@@ -27,9 +27,9 @@ System::String^ GetProcesses::ProcessesListToString()
 	System::TimeSpan time;
 
 	output += System::String::Format( "Host name: {0}\nProcesses\n", hostName );
-	output += System::String::Format( "{0,-24}{1,9}{2,8}{3,15}{4,-12}\n",
+	output += System::String::Format( "{0,-50}{1,-15}{2,-20}{3, -30}{4,-12}\n",
 			  "Process name", "Priority", "Memory", "Runs by", "Status" );
-	output += System::String::Format( "{0,-24}{1,9}{2,8}{3,15}{4,12}\n",
+	output += System::String::Format( "{0,-50}{1,-15}{2,-20}{3,-30}{4,-12}\n",
 									  "", "", "MB", "DD.hh:mm:ss", "" );
 	for each (System::Diagnostics::Process^ var in processesList)
 	{
@@ -57,12 +57,12 @@ System::String^ GetProcesses::ProcessesListToString()
 			
 			time = (var->StartTime.Now - var->StartTime);
 			ramUsed = (((double) var->WorkingSet64) / 1000000);
-			output += System::String::Format( "{0,-24}{1,9}{2,8:F2}{3,15:dd\\.hh\\:mm\\:ss}{4,12}", 
+			output += System::String::Format( "{0,-50}{1,-15}{2,-20:F2}{3,-30:dd\\.hh\\:mm\\:ss}{4,-12}", 
 											  var->ProcessName,priority,ramUsed,time,status );
 		}
 		catch(System::Exception^ e){
 			System::Console::WriteLine( e->Message );
-			output += System::String::Format( "{0,-24}{1,9}{2,8:F2}{3,15}{4,12}",
+			output += System::String::Format( "{0,-50}{1,-15}{2,-20:F2}{3,-30}{4,-12}",
 											  var->ProcessName, priority, ramUsed, "--", status );
 		}
 
